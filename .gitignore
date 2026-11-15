@@ -2,3 +2,6 @@
 PROJECT_HANDOFF.md
 CLAUDE.md
 .claude/
+
+# Local-only form setting (contains the enquiry email address)
+js/enquiry.local.js

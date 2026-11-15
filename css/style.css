@@ -206,6 +206,33 @@ p { margin: 0; }
 .ticker li::after { content: ""; display: inline-block; width: 7px; height: 7px; margin-left: 44px; background: var(--red); transform: rotate(45deg) translateY(-2px); }
 @keyframes ticker { to { transform: translateX(-50%); } }
 
+/* WORLD MAP "The territory" (built by js/map.js from js/map-data.js) */
+.territory { overflow: hidden; }
+.map { position: relative; }
+.map svg { display: block; width: 100%; height: auto; overflow: visible; }
+.map__land { fill: #1b1b1b; stroke: #3a3a3a; stroke-width: 1; vector-effect: non-scaling-stroke; }
+.map__country { cursor: pointer; transition: transform .22s ease-out; }
+.map__country path { fill: var(--red-deep); stroke: var(--black); stroke-width: 1; vector-effect: non-scaling-stroke; transition: fill .2s, stroke .2s; }
+.map__country.is-active path { fill: var(--red); stroke: var(--white); }
+.map__pin { fill: var(--white); stroke: var(--black); stroke-width: 1; vector-effect: non-scaling-stroke; opacity: 0; transition: opacity .2s; pointer-events: none; }
+.map__country.is-active .map__pin { opacity: 1; }
+.map__card {
+  position: absolute; z-index: 4; pointer-events: none;
+  transform: translate(-50%, calc(-100% - 14px));
+  min-width: 170px; max-width: 260px;
+  background: var(--black); border: 1px solid var(--red); border-top-width: 3px;
+  padding: 12px 16px 14px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8);
+  opacity: 0; transition: opacity .2s;
+}
+.map__card.is-on { opacity: 1; }
+.map__card.is-below { transform: translate(-50%, 14px); }
+.map__card h3 { font-size: 1.05rem; margin-bottom: 6px; }
+.map__card ul { margin: 0; padding-left: 18px; color: var(--muted); font-size: 0.9rem; }
+.map__card li::marker { color: var(--red); }
+.map__chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 28px; }
+.chip.is-on { background: var(--red); border-color: var(--red); color: var(--white); }
+
 /* ENQUIRE BANNER (home page) */
 .cta { text-align: center; }
 .cta__inner { max-width: 640px; }
@@ -270,6 +297,8 @@ p { margin: 0; }
 @media (max-width: 820px) {
   .nav__links { display: none; }
   .nav__cta { margin-left: auto; }
+  .map__card { position: static; transform: none; max-width: none; margin-top: 18px; display: none; box-shadow: none; }
+  .map__card.is-on, .map__card.is-below { display: block; transform: none; }
   .enquiry__grid { grid-template-columns: 1fr; }
   .form__row { grid-template-columns: 1fr; }
   .about { grid-template-columns: 1fr; }
