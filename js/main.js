@@ -1,27 +1,34 @@
 // The Drone_Father - small, dependency-free behaviours.
 document.documentElement.classList.add('js');
 
-// 1. Theme tune toggle (browsers block autoplay, so it only plays on click).
+// 1. Theme tune: plays once when a visitor first arrives (once per browser tab session).
+//    Browsers only allow sound without a click on some visits, so this tries straight
+//    away and, if the browser refuses, plays on the visitor's first click, tap or key press.
 (function () {
-  var btn = document.getElementById('themeBtn');
   var audio = document.getElementById('themeAudio');
-  if (!btn || !audio) return;
-  var label = btn.querySelector('.theme-btn__label');
+  if (!audio) return;
+  var KEY = 'df-theme-played';
+  try { if (sessionStorage.getItem(KEY)) return; } catch (e) {}
 
-  function setState(playing) {
-    btn.setAttribute('aria-pressed', playing ? 'true' : 'false');
-    label.textContent = playing ? 'Stop the theme' : 'Play the theme';
+  var done = false;
+  var events = ['pointerdown', 'keydown', 'touchend'];
+  function finish() {
+    done = true;
+    try { sessionStorage.setItem(KEY, '1'); } catch (e) {}
+    events.forEach(function (ev) { document.removeEventListener(ev, onFirstAction, true); });
   }
-  btn.addEventListener('click', function () {
-    if (audio.paused) {
-      audio.currentTime = 0;
-      audio.play().then(function () { setState(true); }).catch(function () { setState(false); });
-    } else {
-      audio.pause();
-      setState(false);
-    }
-  });
-  audio.addEventListener('ended', function () { setState(false); });
+  function tryPlay() {
+    if (done) return;
+    audio.play().then(finish).catch(function () { /* blocked: wait for first action */ });
+  }
+  function onFirstAction(e) {
+    var t = e.target;
+    // Starting a film: skip the tune, the film opens with it anyway.
+    if (t && t.closest && t.closest('.film')) { finish(); return; }
+    tryPlay();
+  }
+  events.forEach(function (ev) { document.addEventListener(ev, onFirstAction, true); });
+  tryPlay();
 })();
 
 // 2. Film cards.
