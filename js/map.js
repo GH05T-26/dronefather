@@ -5,6 +5,8 @@
 // ---------------------------------------------------------------------------
 // One entry per country. "country" must match a name in js/map-data.js exactly
 // (e.g. 'Italy', 'United Kingdom', 'United States of America', 'New Zealand').
+// Optional extras: "label" is the heading shown on the card and button if it should
+// differ from the country name; a place's "region" groups places under a small heading.
 // Each place needs a name plus latitude and longitude (right-click a spot in
 // Google Maps to copy them). South and west are negative numbers.
 //
@@ -14,14 +16,33 @@ var VISITED = [
   {
     country: 'Australia',
     places: [
-      { name: 'Melbourne', lat: -37.81, lon: 144.96 },
-      { name: "K'gari: Lake McKenzie, Champagne Pools, 75 Mile Beach", lat: -25.25, lon: 153.15 }
+      { region: 'Victoria', name: 'Melbourne', lat: -37.81, lon: 144.96 },
+      { region: 'Victoria', name: 'Kangaroo Ground', lat: -37.71, lon: 145.25 },
+      { region: 'Victoria', name: 'Dandenong Ranges (Emerald)', lat: -37.93, lon: 145.46 },
+      { region: 'Victoria', name: 'Mornington Peninsula (Arthurs Seat)', lat: -38.35, lon: 144.96 },
+      { region: 'Queensland', name: "K'gari: Lake McKenzie, Champagne Pools, 75 Mile Beach", lat: -25.25, lon: 153.15 },
+      { region: 'Queensland', name: 'Rainbow Beach (Double Island Point)', lat: -25.94, lon: 153.18 },
+      { region: 'Queensland', name: 'Noosa Heads', lat: -26.38, lon: 153.12 }
+    ]
+  },
+  {
+    country: 'Tasmania',            // drawn as its own shape so it can be highlighted separately
+    label: 'Tasmania, Australia',
+    places: [
+      { name: 'Bay of Fires', lat: -41.22, lon: 148.28 },
+      { name: 'Strahan', lat: -42.15, lon: 145.26 },
+      { name: 'Queenstown area (Gormanston)', lat: -42.07, lon: 145.59 }
     ]
   },
   {
     country: 'New Zealand',
     places: [
-      { name: 'Aoraki / Mount Cook', lat: -43.59, lon: 170.14 }
+      { region: 'South Island', name: 'Aoraki / Mount Cook', lat: -43.70, lon: 170.10 },
+      { region: 'South Island', name: 'Kaikoura', lat: -42.43, lon: 173.69 },
+      { region: 'South Island', name: 'Christchurch (Moncks Bay)', lat: -43.57, lon: 172.76 },
+      { region: 'North Island', name: 'Bay of Islands (Russell)', lat: -35.26, lon: 174.13 },
+      { region: 'North Island', name: 'Waiheke Island', lat: -36.78, lon: 175.01 },
+      { region: 'North Island', name: 'Waitakere Ranges (Huia)', lat: -36.99, lon: 174.57 }
     ]
   },
   {
@@ -83,7 +104,7 @@ var MAP_MAX_SCALE = 2.6; // never grow more than this many times
   var svg = el('svg', {
     viewBox: '0 0 ' + world.w + ' ' + world.h,
     role: 'img',
-    'aria-label': 'World map. Countries filmed in so far: ' + VISITED.map(function (v) { return v.country; }).join(', ') + '.'
+    'aria-label': 'World map. Countries filmed in so far: ' + VISITED.map(function (v) { return v.label || v.country; }).join('; ') + '.'
   });
 
   // Every country we have not shot in: one quiet shape.
@@ -127,9 +148,17 @@ var MAP_MAX_SCALE = 2.6; // never grow more than this many times
   function showCard(item) {
     card.textContent = '';
     var h = document.createElement('h3');
-    h.textContent = item.v.country;
+    h.textContent = item.v.label || item.v.country;
     var ul = document.createElement('ul');
+    var lastRegion = null;
     item.v.places.forEach(function (p) {
+      if (p.region && p.region !== lastRegion) {
+        var head = document.createElement('li');
+        head.className = 'map__region';
+        head.textContent = p.region;
+        ul.appendChild(head);
+        lastRegion = p.region;
+      }
       var li = document.createElement('li');
       li.textContent = p.name;
       ul.appendChild(li);
@@ -209,7 +238,7 @@ var MAP_MAX_SCALE = 2.6; // never grow more than this many times
       var b = document.createElement('button');
       b.type = 'button';
       b.className = 'chip';
-      b.textContent = it.v.country;
+      b.textContent = it.v.label ? it.v.label.split(',')[0] : it.v.country;
       b.addEventListener('click', function () { toggleLock(it); });
       it.chip = b;
       chipsBox.appendChild(b);
