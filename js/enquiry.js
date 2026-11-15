@@ -8,7 +8,7 @@
 // NOT the plain email address, so the address is not readable in the page source.
 // While this is empty the page shows "Enquiries open here soon" instead of the
 // form. See PROJECT_HANDOFF.md section 9c.
-var FORM_ENDPOINT = '';
+var FORM_ENDPOINT = 'https://formsubmit.co/514f34e27dc4bc099ff7113a176a7da1';
 
 // The automatic email reply sent to the person enquiring (FormSubmit's
 // "_autoresponse" field). FormSubmit adds a copy of what they submitted.
