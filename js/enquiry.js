@@ -3,6 +3,8 @@
 // ---------------------------------------------------------------------------
 // SETTINGS (the only part that normally needs editing)
 // ---------------------------------------------------------------------------
+// FormSubmit is a web service this form posts to. Nothing needs installing and
+// no account is needed; this one address is the whole setup.
 // FORM_ENDPOINT: where enquiries are sent. Use FormSubmit's hidden alias, e.g.
 //   'https://formsubmit.co/abc123randomstring'
 // NOT the plain email address, so the address is not readable in the page source.
