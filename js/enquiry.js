@@ -18,6 +18,22 @@ var AUTO_REPLY =
   'with anything you have not already told me: the occasion and what the video is for; the exact ' +
   'location and date; how long the finished video should be; where it will be shown (YouTube, ' +
   'Instagram, a website, a screen at the event); and when you need it by. - The Drone_Father';
+
+// Budget slider: the top of the scale is roughly this many Australian dollars.
+// The scale has 40 steps and is rounded to tidy numbers in each currency.
+var BUDGET_TOP_AUD = 10000;
+
+// Exchange rates: how much of each currency one Australian dollar buys.
+// The page fetches today's rates from RATES_URL when it loads. These built-in
+// figures (from 15 Nov 2026) are only used if that fetch fails.
+var RATES_URL = 'https://open.er-api.com/v6/latest/AUD';
+var RATES_DATE = '15 Nov 2026 (built-in, may be out of date)';
+var RATES = {
+  AUD: 1, USD: 0.678, EUR: 0.614, GBP: 0.513, NZD: 1.227, CAD: 0.968, CHF: 0.569,
+  JPY: 108.4, CNY: 4.53, HKD: 5.32, SGD: 0.874, INR: 64.0, AED: 2.49, SAR: 2.54,
+  ZAR: 11.47, SEK: 6.82, NOK: 6.48, DKK: 4.59, TRY: 34.2, BRL: 3.83, MXN: 12.6,
+  KRW: 907, THB: 23.0, IDR: 12362, MYR: 2.77, PHP: 43.3
+};
 // ---------------------------------------------------------------------------
 
 (function () {
@@ -97,6 +113,106 @@ var AUTO_REPLY =
     input.value = value;
   }
 
+  // ---- Dates, currency and budget ------------------------------------------
+  function $(id) { return document.getElementById(id); }
+
+  // "2027-03-14" from the calendar becomes "14/03/2027".
+  function ddmmyyyy(iso) {
+    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || '');
+    return m ? m[3] + '/' + m[2] + '/' + m[1] : '';
+  }
+
+  // Round to a tidy step: 1, 2, 2.5 or 5 times a power of ten.
+  function tidy(n) {
+    var pow = Math.pow(10, Math.floor(Math.log(n) / Math.LN10));
+    var f = n / pow;
+    var pick = f < 1.5 ? 1 : f < 2.25 ? 2 : f < 3.75 ? 2.5 : f < 7.5 ? 5 : 10;
+    return pick * pow;
+  }
+  function stepFor(cur) { return tidy(BUDGET_TOP_AUD / 40 * (RATES[cur] || 1)); }
+
+  function money(amount, cur) {
+    try {
+      return new Intl.NumberFormat('en-AU', { style: 'currency', currency: cur, currencyDisplay: 'code', maximumFractionDigits: 0 }).format(amount);
+    } catch (e) { return cur + ' ' + Math.round(amount); }
+  }
+
+  function budgetText() {
+    if (!$('budgetOn').checked) return { shown: '', aud: '' };
+    var cur = $('currencySelect').value;
+    var step = stepFor(cur);
+    var lo = +$('budgetLo').value, hi = +$('budgetHi').value;
+    var open = hi >= 40;
+    var shown = lo === hi
+      ? (open ? money(lo * step, cur) + ' or more' : 'About ' + money(lo * step, cur))
+      : money(lo * step, cur) + ' to ' + money(hi * step, cur) + (open ? ' or more' : '');
+    var aud = '';
+    if (cur === 'AUD') {
+      aud = shown;
+    } else {
+      var rate = RATES[cur];
+      var a = function (v) { return money(Math.round(v * step / rate / 10) * 10, 'AUD'); };
+      aud = (lo === hi ? (open ? a(lo) + ' or more' : 'About ' + a(lo)) : a(lo) + ' to ' + a(hi) + (open ? ' or more' : '')) +
+        ' (approx; 1 AUD = ' + rate + ' ' + cur + ', rates from ' + RATES_DATE + ')';
+    }
+    return { shown: shown, aud: aud };
+  }
+
+  function paintBudget() {
+    var lo = +$('budgetLo').value, hi = +$('budgetHi').value;
+    $('budgetFill').style.left = (lo / 40 * 100) + '%';
+    $('budgetFill').style.right = (100 - hi / 40 * 100) + '%';
+    $('budgetValue').textContent = budgetText().shown;
+  }
+
+  function setupExtras() {
+    var today = new Date();
+    var iso = today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
+    $('dateInput').min = iso;
+    $('deadlineInput').min = iso;
+
+    $('budgetOn').addEventListener('change', function () {
+      $('budgetBody').hidden = !this.checked;
+      paintBudget();
+    });
+    // The two handles may meet but never cross.
+    $('budgetLo').addEventListener('input', function () {
+      if (+this.value > +$('budgetHi').value) $('budgetHi').value = this.value;
+      paintBudget();
+    });
+    $('budgetHi').addEventListener('input', function () {
+      if (+this.value < +$('budgetLo').value) $('budgetLo').value = this.value;
+      paintBudget();
+    });
+    $('currencySelect').addEventListener('change', paintBudget);
+    paintBudget();
+
+    // Today's exchange rates (falls back silently to the built-in table).
+    if (window.fetch) {
+      fetch(RATES_URL).then(function (r) { return r.json(); }).then(function (d) {
+        if (!d || d.result !== 'success' || !d.rates) return;
+        Object.keys(RATES).forEach(function (k) { if (d.rates[k] > 0) RATES[k] = +d.rates[k].toFixed(k === 'AUD' ? 0 : 4); });
+        RATES_DATE = (d.time_last_update_utc || '').replace(/^\w+, /, '').replace(/ \d\d:\d\d:\d\d.*$/, '') || RATES_DATE;
+        paintBudget();
+      }).catch(function () {});
+    }
+  }
+
+  // Write the calendar dates and the budget into the hidden boxes that get sent.
+  function syncDerived() {
+    var date = ddmmyyyy($('dateInput').value);
+    if ($('dateFlexible').checked) date = date ? date + ' (flexible)' : 'Flexible';
+    form.elements.date.value = date;
+
+    var deadline = ddmmyyyy($('deadlineInput').value);
+    if ($('deadlineNoRush').checked) deadline = deadline ? deadline + ' (no rush)' : 'No rush';
+    form.elements.deadline.value = deadline;
+
+    var b = budgetText();
+    form.elements.budget.value = b.shown;
+    form.elements.budget_in_AUD.value = b.aud;
+  }
+
   function start(endpoint) {
     // Back from a real send: show the receipt.
     if (sent) {
@@ -106,6 +222,7 @@ var AUTO_REPLY =
     }
     if (!endpoint && !demo) { closed.hidden = false; return; }
     form.hidden = false;
+    setupExtras();
 
     form.addEventListener('submit', function (e) {
       errorBox.hidden = true;
@@ -119,6 +236,7 @@ var AUTO_REPLY =
         return;
       }
 
+      syncDerived();
       var data = {};
       new FormData(form).forEach(function (value, key) {
         if (key.charAt(0) !== '_') data[key] = String(value).trim();

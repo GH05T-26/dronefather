@@ -101,10 +101,12 @@
               <span>Where is it? <b>*</b></span>
               <input type="text" name="location" placeholder="Town or venue, and country" required>
             </label>
-            <label class="field">
-              <span>When is it?</span>
-              <input type="text" name="date" placeholder="A date, or 'flexible'">
-            </label>
+            <div class="field">
+              <label for="dateInput"><span>When is it?</span></label>
+              <input type="date" id="dateInput">
+              <label class="field__check"><input type="checkbox" id="dateFlexible"> The date is flexible</label>
+              <input type="hidden" name="date">
+            </div>
           </div>
 
           <fieldset class="field field--choices">
@@ -116,14 +118,60 @@
           </fieldset>
 
           <div class="form__row">
-            <label class="field">
-              <span>When do you need it by?</span>
-              <input type="text" name="deadline" placeholder="A date, or 'no rush'">
-            </label>
-            <label class="field">
-              <span>Budget in mind (optional)</span>
-              <input type="text" name="budget" placeholder="A rough figure helps">
-            </label>
+            <div class="field">
+              <label for="deadlineInput"><span>When do you need it by?</span></label>
+              <input type="date" id="deadlineInput">
+              <label class="field__check"><input type="checkbox" id="deadlineNoRush"> No rush</label>
+              <input type="hidden" name="deadline">
+            </div>
+            <div class="field">
+              <label for="currencySelect"><span>Your currency</span></label>
+              <select id="currencySelect">
+                <option value="AUD">AUD - Australian dollar</option>
+                <option value="USD">USD - US dollar</option>
+                <option value="EUR">EUR - Euro</option>
+                <option value="GBP">GBP - British pound</option>
+                <option value="NZD">NZD - New Zealand dollar</option>
+                <option value="CAD">CAD - Canadian dollar</option>
+                <option value="CHF">CHF - Swiss franc</option>
+                <option value="JPY">JPY - Japanese yen</option>
+                <option value="CNY">CNY - Chinese yuan</option>
+                <option value="HKD">HKD - Hong Kong dollar</option>
+                <option value="SGD">SGD - Singapore dollar</option>
+                <option value="INR">INR - Indian rupee</option>
+                <option value="AED">AED - UAE dirham</option>
+                <option value="SAR">SAR - Saudi riyal</option>
+                <option value="ZAR">ZAR - South African rand</option>
+                <option value="SEK">SEK - Swedish krona</option>
+                <option value="NOK">NOK - Norwegian krone</option>
+                <option value="DKK">DKK - Danish krone</option>
+                <option value="TRY">TRY - Turkish lira</option>
+                <option value="BRL">BRL - Brazilian real</option>
+                <option value="MXN">MXN - Mexican peso</option>
+                <option value="KRW">KRW - South Korean won</option>
+                <option value="THB">THB - Thai baht</option>
+                <option value="IDR">IDR - Indonesian rupiah</option>
+                <option value="MYR">MYR - Malaysian ringgit</option>
+                <option value="PHP">PHP - Philippine peso</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Budget: two sliders on one track (lowest and highest). js/enquiry.js runs it. -->
+          <div class="field budget" id="budget">
+            <span>Budget range (optional)</span>
+            <label class="field__check"><input type="checkbox" id="budgetOn"> I have a budget in mind</label>
+            <div class="budget__body" id="budgetBody" hidden>
+              <p class="budget__value" id="budgetValue" aria-live="polite"></p>
+              <div class="range">
+                <div class="range__track"><div class="range__fill" id="budgetFill"></div></div>
+                <input type="range" id="budgetLo" min="0" max="40" step="1" value="4" aria-label="Lowest budget">
+                <input type="range" id="budgetHi" min="0" max="40" step="1" value="12" aria-label="Highest budget">
+              </div>
+              <p class="form__small">Drag the two handles to set the lowest and highest you would spend.</p>
+            </div>
+            <input type="hidden" name="budget">
+            <input type="hidden" name="budget_in_AUD">
           </div>
 
           <label class="field">
@@ -136,7 +184,7 @@
 
           <p class="form__error" id="formError" role="alert" hidden></p>
           <button class="btn btn--red form__submit" type="submit">Send enquiry</button>
-          <p class="form__small">Your details are only used to reply to this enquiry.</p>
+          <p class="form__small">Your details are only used to reply to this enquiry. Currency rates by <a href="https://www.exchangerate-api.com" target="_blank" rel="noopener">Exchange Rate API</a>.</p>
         </form>
 
         <!-- Receipt: filled in by js/enquiry.js after a successful send -->
