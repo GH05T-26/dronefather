@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>The Drone_Father | Videos you can't refuse</title>
-  <meta name="description" content="The Drone_Father: aerial films from Australia and New Zealand by a Londoner down under. We make videos you can't refuse.">
+  <meta name="description" content="The Drone_Father: aerial videos from around the world by a Londoner with a drone. We make videos you can't refuse.">
   <meta name="theme-color" content="#010101">
   <meta property="og:title" content="The Drone_Father">
   <meta property="og:description" content="We make videos you can't refuse.">
@@ -16,7 +16,8 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <a class="skip" href="#films">Skip to the films</a>
+  <div class="progress" id="progress" aria-hidden="true"></div>
+  <a class="skip" href="#videos">Skip to the videos</a>
 
   <header class="nav" id="top">
     <a class="nav__brand" href="#top" aria-label="The Drone_Father home">
@@ -24,11 +25,12 @@
       <span>The Drone_Father</span>
     </a>
     <nav class="nav__links" aria-label="Main">
-      <a href="#films">Films</a>
+      <a href="#videos">Long videos</a>
       <a href="#reels">Reels</a>
       <a href="#about">About</a>
       <a href="#family">Join the family</a>
     </nav>
+    <a class="nav__cta" href="enquiries.html">Enquire</a>
   </header>
 
   <main>
@@ -38,20 +40,32 @@
       <img class="hero__logo" src="assets/logo.png" alt="The Drone_Father logo" width="500" height="500">
       <h1 class="visually-hidden">The Drone_Father</h1>
       <p class="hero__tagline">We make videos you can't refuse</p>
-      <p class="hero__sub">Aerial films from Australia and New Zealand, shot by a Londoner a long way from home.</p>
+      <p class="hero__sub">Aerial videos from around the world, shot by a Londoner a long way from home.</p>
       <div class="hero__cta">
-        <a class="btn btn--red" href="#films">Watch the films</a>
+        <a class="btn btn--red" href="#videos">Watch the videos</a>
         <a class="btn btn--ghost" href="https://www.youtube.com/@The_Drone_Father?sub_confirmation=1" target="_blank" rel="noopener">Subscribe on YouTube</a>
       </div>
-      <a class="hero__scroll" href="#films" aria-label="Scroll to the films"><span></span></a>
+      <a class="hero__scroll" href="#videos" aria-label="Scroll to the videos"><span></span></a>
     </section>
 
-    <!-- FILMS -->
-    <section class="section" id="films">
+    <!-- LOCATION TICKER (the list is repeated once so the loop is seamless; edit both copies) -->
+    <div class="ticker" aria-label="Places filmed so far">
+      <div class="ticker__track">
+        <ul>
+          <li>Melbourne</li><li>K'gari</li><li>Lake McKenzie</li><li>Champagne Pools</li><li>75 Mile Beach</li><li>Aoraki / Mount Cook</li>
+        </ul>
+        <ul aria-hidden="true">
+          <li>Melbourne</li><li>K'gari</li><li>Lake McKenzie</li><li>Champagne Pools</li><li>75 Mile Beach</li><li>Aoraki / Mount Cook</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- LONG VIDEOS (code still uses the class name "film" for these cards) -->
+    <section class="section" id="videos">
       <div class="section__head">
-        <p class="eyebrow">The films</p>
+        <p class="eyebrow">Long videos</p>
         <h2>The family business</h2>
-        <p class="section__lead">Full-length cuts from the YouTube channel. Rest your cursor on one for a silent preview, or click to play it here.</p>
+        <p class="section__lead">The longer pieces from the YouTube channel. Rest your cursor on one for a silent preview, or click to play it here.</p>
       </div>
       <div class="films">
         <article class="film reveal">
@@ -147,8 +161,8 @@
           <p class="eyebrow">The don</p>
           <h2>A Londoner in Australia, with a drone and a plan</h2>
           <!-- PLACEHOLDER COPY: written from the Instagram bio. Replace with your own words. -->
-          <p>The Drone_Father is a one-man creative outfit: a Londoner who moved to Australia and started pointing a camera at it from above. Glaciers, sand islands, city skylines after dark.</p>
-          <p>Every film is flown, shot and cut in-house. No stock footage, no shortcuts. Just places worth seeing, from an angle you don't usually get.</p>
+          <p>The Drone_Father is a one-man creative outfit: a Londoner who moved to Australia and started pointing a camera at the world from above. Glaciers, sand islands, city skylines after dark.</p>
+          <p>Every video is flown, shot and cut in-house. No stock footage, no shortcuts. Just places worth seeing, from an angle you don't usually get.</p>
         </div>
         <ul class="about__facts reveal">
           <li><strong>Based</strong><span>Australia</span></li>
@@ -156,6 +170,16 @@
           <li><strong>Flying since</strong><span>2023</span></li>
           <li><strong>Shot so far</strong><span>Melbourne · K'gari · Mount Cook</span></li>
         </ul>
+      </div>
+    </section>
+
+    <!-- ENQUIRE CALL TO ACTION -->
+    <section class="section section--dark cta" id="enquire">
+      <div class="cta__inner reveal">
+        <p class="eyebrow">Got something worth filming?</p>
+        <h2>Make us an offer</h2>
+        <p class="section__lead">Weddings, events, property, travel, brand pieces. Tell us the occasion and how long a video you need, and we will take it from there.</p>
+        <a class="btn btn--red" href="enquiries.html">Start an enquiry</a>
       </div>
     </section>
 
@@ -178,7 +202,7 @@
   <footer class="footer">
     <img src="assets/logo.png" alt="" width="72" height="72">
     <p>&copy; <span id="year">2026</span> The Drone_Father. All footage shot and owned by The Drone_Father.</p>
-    <a href="#top">Back to top</a>
+    <p class="footer__links"><a href="enquiries.html">Enquiries</a> <a href="#top">Back to top</a></p>
   </footer>
 
   <audio id="themeAudio" src="assets/theme.mp3" preload="auto"></audio>

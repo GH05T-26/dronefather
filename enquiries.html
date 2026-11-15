@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Enquiries | The Drone_Father</title>
+  <meta name="description" content="Enquire about a drone video from The Drone_Father. Tell us the occasion, the location and how long a video you need.">
+  <meta name="theme-color" content="#010101">
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a class="skip" href="#enquiry">Skip to the form</a>
+
+  <header class="nav" id="top">
+    <a class="nav__brand" href="index.html" aria-label="The Drone_Father home">
+      <img src="assets/logo.png" alt="" width="44" height="44">
+      <span>The Drone_Father</span>
+    </a>
+    <nav class="nav__links" aria-label="Main">
+      <a href="index.html#videos">Long videos</a>
+      <a href="index.html#reels">Reels</a>
+      <a href="index.html#about">About</a>
+      <a href="index.html#family">Join the family</a>
+    </nav>
+    <a class="nav__cta" href="index.html">Back to site</a>
+  </header>
+
+  <main class="section enquiry" id="enquiry">
+    <div class="enquiry__grid">
+
+      <!-- LEFT: intro and what happens next -->
+      <div class="enquiry__intro">
+        <p class="eyebrow">Enquiries</p>
+        <h1>Make us an offer</h1>
+        <p class="enquiry__lead">Tell us what you have in mind. The more we know up front, the faster we can come back with a plan and a price.</p>
+        <ol class="steps">
+          <li><strong>You send the details</strong><span>Occasion, place, date and how long a video you need.</span></li>
+          <li><strong>You get a confirmation</strong><span>Straight away, on this page and by email, so you know it arrived.</span></li>
+          <li><strong>We reply with a plan</strong><span>What we would shoot, what you would receive, and what it would cost.</span></li>
+        </ol>
+        <p class="enquiry__note">Prefer a message? <a href="https://www.instagram.com/the_drone_father/" target="_blank" rel="noopener">Send a DM on Instagram</a>.</p>
+      </div>
+
+      <!-- RIGHT: form, then the receipt that replaces it -->
+      <div class="enquiry__panel">
+
+        <!-- Shown instead of the form until js/enquiry.js has a FORM_ENDPOINT -->
+        <div class="notice" id="formClosed" hidden>
+          <h2>Enquiries open here soon</h2>
+          <p>The form is being connected. Until then, the quickest way to reach us is a message on Instagram.</p>
+          <a class="btn btn--red" href="https://www.instagram.com/the_drone_father/" target="_blank" rel="noopener">Message on Instagram</a>
+        </div>
+
+        <form class="form" id="enquiryForm" novalidate hidden>
+          <div class="form__row">
+            <label class="field">
+              <span>Your name <b>*</b></span>
+              <input type="text" name="name" autocomplete="name" required>
+            </label>
+            <label class="field">
+              <span>Email <b>*</b></span>
+              <input type="email" name="email" autocomplete="email" required>
+            </label>
+          </div>
+
+          <div class="form__row">
+            <label class="field">
+              <span>What is the occasion? <b>*</b></span>
+              <select name="occasion" required>
+                <option value="">Choose one</option>
+                <option>Wedding</option>
+                <option>Party or private event</option>
+                <option>Festival, sport or public event</option>
+                <option>Property or real estate</option>
+                <option>Business or brand video</option>
+                <option>Travel or tourism</option>
+                <option>Music video</option>
+                <option>Something else</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>How long should the video be? <b>*</b></span>
+              <select name="length" required>
+                <option value="">Choose one</option>
+                <option>Under 1 minute (reel or short)</option>
+                <option>1 to 3 minutes</option>
+                <option>3 to 10 minutes</option>
+                <option>Longer than 10 minutes</option>
+                <option>Raw footage only</option>
+                <option>Not sure yet</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="form__row">
+            <label class="field">
+              <span>Where is it? <b>*</b></span>
+              <input type="text" name="location" placeholder="Town or venue, and country" required>
+            </label>
+            <label class="field">
+              <span>When is it?</span>
+              <input type="text" name="date" placeholder="A date, or 'flexible'">
+            </label>
+          </div>
+
+          <fieldset class="field field--choices">
+            <legend>Where will the video be shown?</legend>
+            <label><input type="radio" name="format" value="Widescreen (YouTube, website, TV)"> Widescreen (YouTube, website, TV)</label>
+            <label><input type="radio" name="format" value="Vertical (Instagram, TikTok)"> Vertical (Instagram, TikTok)</label>
+            <label><input type="radio" name="format" value="Both"> Both</label>
+            <label><input type="radio" name="format" value="Not sure" checked> Not sure</label>
+          </fieldset>
+
+          <div class="form__row">
+            <label class="field">
+              <span>When do you need it by?</span>
+              <input type="text" name="deadline" placeholder="A date, or 'no rush'">
+            </label>
+            <label class="field">
+              <span>Budget in mind (optional)</span>
+              <input type="text" name="budget" placeholder="A rough figure helps">
+            </label>
+          </div>
+
+          <label class="field">
+            <span>Anything else we should know?</span>
+            <textarea name="details" rows="5" placeholder="What you want it to feel like, shots you have in mind, links to videos you like"></textarea>
+          </label>
+
+          <!-- Spam trap: real visitors never see or fill this -->
+          <input type="text" name="_honey" class="form__trap" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+          <p class="form__error" id="formError" role="alert" hidden></p>
+          <button class="btn btn--red form__submit" type="submit">Send enquiry</button>
+          <p class="form__small">Your details are only used to reply to this enquiry.</p>
+        </form>
+
+        <!-- Receipt: filled in by js/enquiry.js after a successful send -->
+        <div class="receipt" id="receipt" tabindex="-1" hidden>
+          <p class="eyebrow">Received</p>
+          <h2 id="receiptTitle">Your enquiry is in</h2>
+          <p id="receiptLead"></p>
+          <dl class="receipt__list" id="receiptList"></dl>
+          <div class="receipt__more" id="receiptMore" hidden>
+            <h3>A few things that would speed up a quote</h3>
+            <ul id="receiptAsks"></ul>
+            <p>Just reply to the confirmation email with any of these.</p>
+          </div>
+          <a class="btn btn--ghost" href="index.html#videos">Watch the videos while you wait</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <img src="assets/logo.png" alt="" width="72" height="72">
+    <p>&copy; <span id="year">2026</span> The Drone_Father. All footage shot and owned by The Drone_Father.</p>
+    <p class="footer__links"><a href="index.html">Home</a></p>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script src="js/enquiry.js"></script>
+</body>
+</html>

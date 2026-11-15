@@ -121,6 +121,31 @@ document.documentElement.classList.add('js');
   items.forEach(function (i) { io.observe(i); });
 })();
 
+// 5. Scroll progress bar along the top of the page.
+(function () {
+  var bar = document.getElementById('progress');
+  if (!bar) return;
+  function update() {
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    bar.style.transform = 'scaleX(' + (max > 0 ? h.scrollTop / max : 0) + ')';
+  }
+  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update);
+  update();
+})();
+
+// 6. The red glow behind the hero logo follows the cursor (mouse devices only).
+(function () {
+  var hero = document.querySelector('.hero');
+  if (!hero || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+  hero.addEventListener('mousemove', function (e) {
+    var r = hero.getBoundingClientRect();
+    hero.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100) + '%');
+    hero.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100) + '%');
+  });
+})();
+
 // 4. Footer year.
 var y = document.getElementById('year');
 if (y) y.textContent = new Date().getFullYear();
