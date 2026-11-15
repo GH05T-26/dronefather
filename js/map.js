@@ -23,13 +23,37 @@ var VISITED = [
     places: [
       { name: 'Aoraki / Mount Cook', lat: -43.59, lon: 170.14 }
     ]
+  },
+  {
+    country: 'Italy',
+    places: [
+      { name: 'Lake Como (Bellagio)', lat: 45.99, lon: 9.26 }
+    ]
+  },
+  {
+    country: 'Greece',
+    places: [
+      { name: 'Naxos', lat: 37.08, lon: 25.34 }
+    ]
+  },
+  {
+    country: 'Croatia',
+    places: [
+      { name: 'Hvar', lat: 43.17, lon: 16.44 }
+    ]
+  },
+  {
+    country: 'Turkey',
+    places: [
+      { name: 'Cappadocia', lat: 38.64, lon: 34.83 }
+    ]
   }
 ];
 
 // Feel of the hover effect.
 var MAP_REACH = 90;      // how close the cursor must get before a country starts growing (map units; the map is 1000 wide)
-var MAP_TARGET = 110;    // small countries grow until they are about this wide
-var MAP_MAX_SCALE = 3.5; // never grow more than this many times
+var MAP_TARGET = 80;     // small countries grow until they are about this wide
+var MAP_MAX_SCALE = 2.6; // never grow more than this many times
 // ---------------------------------------------------------------------------
 
 (function () {
@@ -130,6 +154,7 @@ var MAP_MAX_SCALE = 3.5; // never grow more than this many times
       if (active.chip) active.chip.classList.remove('is-on');
     }
     active = item;
+    wrap.classList.toggle('has-active', !!item);   // dims the other red countries
     if (!item) { card.classList.remove('is-on'); return; }
     item.g.classList.add('is-active');
     if (item.chip) item.chip.classList.add('is-on');
@@ -157,14 +182,21 @@ var MAP_MAX_SCALE = 3.5; // never grow more than this many times
       var r = svg.getBoundingClientRect();
       var x = (e.clientX - r.left) / r.width * world.w;
       var y = (e.clientY - r.top) / r.height * world.h;
-      var best = null, bestT = 0;
+      // Find the country whose centre is nearest the cursor: it gets the full effect.
+      // Its neighbours only swell slightly, so close-together countries (Italy,
+      // Croatia, Greece) do not all balloon on top of each other.
+      var best = null, bestD = Infinity;
       items.forEach(function (it) {
         var dx = x - it.c.c[0], dy = y - it.c.c[1];
-        var d = Math.max(0, Math.sqrt(dx * dx + dy * dy) - it.half);
-        var t = Math.max(0, 1 - d / MAP_REACH);
+        it.d = Math.sqrt(dx * dx + dy * dy);
+        if (it.d < bestD) { bestD = it.d; best = it; }
+      });
+      var bestT = 0;
+      items.forEach(function (it) {
+        var t = Math.max(0, 1 - Math.max(0, it.d - it.half) / MAP_REACH);
         t = t * t * (3 - 2 * t);                    // ease in and out
-        setScale(it, 1 + (it.max - 1) * t);
-        if (t > bestT) { bestT = t; best = it; }
+        if (it === best) { bestT = t; setScale(it, 1 + (it.max - 1) * t); }
+        else setScale(it, 1 + (it.max - 1) * t * 0.12);
       });
       setActive(bestT > 0.35 ? best : null);
     });

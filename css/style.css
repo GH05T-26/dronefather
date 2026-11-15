@@ -211,9 +211,11 @@ p { margin: 0; }
 .map { position: relative; }
 .map svg { display: block; width: 100%; height: auto; overflow: visible; }
 .map__land { fill: #1b1b1b; stroke: #3a3a3a; stroke-width: 1; vector-effect: non-scaling-stroke; }
-.map__country { cursor: pointer; transition: transform .22s ease-out; }
+.map__country { cursor: pointer; transition: transform .22s ease-out, opacity .2s; }
 .map__country path { fill: var(--red-deep); stroke: var(--black); stroke-width: 1; vector-effect: non-scaling-stroke; transition: fill .2s, stroke .2s; }
 .map__country.is-active path { fill: var(--red); stroke: var(--white); }
+.map__country { opacity: 1; }
+.map.has-active .map__country:not(.is-active) { opacity: 0.4; }
 .map__pin { fill: var(--white); stroke: var(--black); stroke-width: 1; vector-effect: non-scaling-stroke; opacity: 0; transition: opacity .2s; pointer-events: none; }
 .map__country.is-active .map__pin { opacity: 1; }
 .map__card {
